@@ -1,0 +1,31 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import supabase from '@/lib/supabaseClient';
+
+export default function PatientsPage() {
+  const [patients, setPatients] = useState([]);
+
+  useEffect(() => {
+    async function fetchPatients() {
+      const { data, error } = await supabase.from('patients').select('*');
+      if (error) console.error('Supabase error:', error);
+      else setPatients(data);
+    }
+
+    fetchPatients();
+  }, []);
+
+  return (
+    <div>
+      <h1 className="text-2xl font-bold">Patients</h1>
+      <ul className="mt-4 space-y-2">
+        {patients.map((p) => (
+          <li key={p.id} className="bg-white p-4 rounded shadow">
+            {p.name}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
